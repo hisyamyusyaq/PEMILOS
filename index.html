@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>e-Pemilos - Pemilihan Ketua & Wakil Ketua OSIS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Gradient Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glass Morphism Effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Particle System */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Mobile-first responsive design */
+        .container {
+            width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                max-width: 640px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1024px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .container {
+                max-width: 1280px;
+            }
+        }
+
+        /* Page transitions */
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: calc(100vh - 140px);
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+            padding: 1rem;
+        }
+
+        /* Card design */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Header */
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary-color), #6366f1);
+            position: relative;
+            overflow: hidden;
+            z-index: 20;
+            padding: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #6366f1);
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px 0 rgba(79, 70, 229, 0.4);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px -4px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #374151;
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(209, 213, 219, 0.8);
+            background: rgba(249, 250, 251, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form elements */
+        .form-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(209, 213, 219, 0.8);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 1rem;
+            width: 100%;
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        /* Candidate cards */
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .candidate-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .candidate-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .candidate-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+
+        .candidate-card.selected {
+            border-color: #4f46e5;
+            box-shadow: 0 8px 25px -6px rgba(79, 70, 229, 0.3);
+        }
+
+        .candidate-card.selected::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+        }
+
+        /* Results page */
+        .results-header {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 200px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Loading and notifications */
+        .loader {
+            border: 4px solid rgba(243, 243, 243, 0.8);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            left: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            max-width: 400px;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.hide {
+            transform: translateX(120%);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.9));
+            color: white;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.9));
+            color: white;
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+            color: white;
+        }
+
+        /* Progress bars */
+        .progress-bar {
+            height: 10px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Floating shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float-shape 20s infinite linear;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .shape-circle {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+        }
+
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 60px solid #10b981;
+            border-radius: 0;
+        }
+
+        .shape-square {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            border-radius: 10px;
+        }
+
+        @keyframes float-shape {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        /* Text responsive */
+        .responsive-text {
+            font-size: clamp(0.875rem, 2.5vw, 1.25rem);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            .header-gradient {
+                padding: 1rem 0.5rem;
+            }
+
+            .card {
+                margin-bottom: 0.75rem;
+                padding: 1rem;
+            }
+
+            .btn-primary, .btn-secondary {
+                padding: 0.875rem 1.25rem;
+                font-size: 0.9rem;
+            }
+
+            .results-header {
+                padding: 1rem;
+            }
+
+            .chart-container {
+                height: 180px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(241, 241, 241, 0.5);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+        }
+
+        /* Confetti animation */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Form container untuk PC */
+        @media (min-width: 1024px) {
+            .form-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        /* Improved candidate card for mobile */
+        .candidate-photo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto;
+            border: 3px solid rgba(226, 232, 240, 0.8);
+            transition: border-color 0.3s ease;
+        }
+
+        .candidate-card.selected .candidate-photo {
+            border-color: #4f46e5;
+        }
+
+        /* Improved line clamping for mobile */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Swipe gestures for mobile navigation */
+        .swipe-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Improved modal for mobile */
+        @media (max-width: 640px) {
+            .modal-content {
+                margin: 1rem;
+                padding: 1.25rem;
+            }
+        }
+
+        /* Slideshow styles */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .slide-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+
+        .slide-nav:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .slide-nav.prev {
+            left: 10px;
+        }
+
+        .slide-nav.next {
+            right: 10px;
+        }
+
+        .slide-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .slide-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(203, 213, 225, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-indicator.active {
+            background: #4f46e5;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 640px) {
+            .slide-nav {
+                width: 36px;
+                height: 36px;
+            }
+
+            .slide {
+                padding: 1rem;
+            }
+        }
+
+        /* Results slide specific styles */
+        .results-slide {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            height: 100%;
+            backdrop-filter: blur(5px);
+        }
+
+        .candidate-result {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.75rem;
+            background: rgba(248, 250, 252, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .candidate-result:hover {
+            background: rgba(241, 245, 249, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .candidate-result.winner {
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.8), rgba(253, 230, 138, 0.8));
+            border-left: 4px solid #f59e0b;
+        }
+
+        .candidate-rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .candidate-result.winner .candidate-rank {
+            background: #f59e0b;
+        }
+
+        .candidate-photo-small {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 1rem;
+            border: 2px solid rgba(226, 232, 240, 0.8);
+            flex-shrink: 0;
+        }
+
+        .candidate-result.winner .candidate-photo-small {
+            border-color: #f59e0b;
+        }
+
+        .candidate-details {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .candidate-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .vote-percentage {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .candidate-result.winner .vote-percentage {
+            color: #d97706;
+        }
+
+        .vote-progress {
+            height: 6px;
+            background: rgba(226, 232, 240, 0.8);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .vote-progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #4f46e5, #6366f1);
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .candidate-result.winner .vote-progress-fill {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .participation-highlight {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .participation-percentage {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .participation-label {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .participation-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .stat-box.voted {
+            background: linear-gradient(135deg, rgba(219, 234, 254, 0.8), rgba(224, 231, 255, 0.8));
+        }
+
+        .stat-box.not-voted {
+            background: rgba(241, 245, 249, 0.8);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value.voted {
+            color: #4f46e5;
+        }
+
+        .stat-value.not-voted {
+            color: #64748b;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Interactive Background Elements */
+        .interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Holographic Effect */
+        .holographic {
+            background: linear-gradient(125deg,
+                rgba(255,255,255,0.1) 0%,
+                rgba(255,255,255,0.2) 25%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0.2) 75%,
+                rgba(255,255,255,0.1) 100%);
+            background-size: 200% 200%;
+            animation: holographic 3s ease infinite;
+        }
+
+        @keyframes holographic {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glow Effect */
+        .glow {
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glow:hover {
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* 3D Transform Effects */
+        .transform-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card-3d {
+            transform: rotateY(0deg);
+            transition: transform 0.5s ease;
+        }
+
+        .card-3d:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+
+        /* Neon Text Effect */
+        .neon-text {
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #4f46e5,
+                0 0 30px #4f46e5,
+                0 0 40px #4f46e5;
+        }
+
+        /* Magnetic Button Effect */
+        .magnetic-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .magnetic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            border-radius: inherit;
+        }
+
+        .magnetic-btn:hover::before {
+            transform: scale(1.5);
+        }
+
+        /* Confetti container */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear forwards;
+        }
+
+        /* Fix for thank you page layout */
+        .thank-you-container {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Candidate photo for results page */
+        .candidate-photo-results {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 1rem;
+            border: 2px solid rgba(226, 232, 240, 0.8);
+            flex-shrink: 0;
+        }
+
+        .candidate-result.winner .candidate-photo-results {
+            border-color: #f59e0b;
+        }
+
+        @media (max-width: 640px) {
+            .candidate-photo-results {
+                width: 50px;
+                height: 50px;
+                margin-right: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- Animated Gradient Background -->
+<div class="animated-bg"></div>
+
+<!-- Interactive Background Elements -->
+<div class="interactive-bg" id="interactive-bg"></div>
+
+<!-- Particle System -->
+<div id="particles-js"></div>
+
+<!-- Floating Shapes -->
+<div class="floating-shapes">
+    <div class="shape shape-circle floating" style="width: 80px; height: 80px; top: 10%; left: 5%; animation-duration: 25s;"></div>
+    <div class="shape shape-triangle floating" style="top: 20%; left: 80%; animation-duration: 30s;"></div>
+    <div class="shape shape-square floating" style="width: 60px; height: 60px; top: 70%; left: 10%; animation-duration: 35s;"></div>
+    <div class="shape shape-circle floating" style="width: 40px; height: 40px; top: 40%; left: 90%; animation-duration: 20s;"></div>
+    <div class="shape shape-square floating" style="width: 100px; height: 100px; top: 80%; left: 70%; animation-duration: 40s;"></div>
+</div>
+
+<!-- Confetti Container -->
+<div class="confetti-container" id="confetti-container"></div>
+
+<!-- Header -->
+<header class="header-gradient text-white py-4 shadow-lg relative glass-effect">
+    <div class="container">
+        <div class="flex flex-col items-center justify-center gap-4">
+            <div class="flex items-center justify-center gap-4">
+                <div class="relative">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEggEAfKcwL-4ggCQfvFLioSBlkHIbFVi7Uv5zdmnGxoE_cnTdwRLBtto00AlHHwb_Ulncs9FIN3nKbjEYu_KJmozWBCQhJXir4Q81hnXtE4vJT9eX1YTR-2eyW3X7eVjUkKfeMhHPskTExV/s1600/logo+sman+1+leuwimunding.gif"
+                         alt="Logo SMA Negeri 1 Leuwimunding"
+                         class="w-16 h-16 object-contain rounded-xl shadow-lg float pulse">
+                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h1 class="text-2xl font-bold mb-1 text-white neon-text">E-PEMILOS</h1>
+                    <p class="text-indigo-200 text-sm">SMA Negeri 1 Leuwimunding</p>
+                </div>
+            </div>
+            <div class="w-full max-w-md">
+                <div class="bg-white/20 rounded-full py-2 px-4 text-sm backdrop-blur-sm text-center glass-effect">
+                    <i class="fas fa-vote-yea mr-2"></i>
+                    Pemilihan Ketua & Wakil Ketua OSIS
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto py-4">
+    <!-- Setup Page -->
+    <div id="setup-page" class="page active">
+        <div class="card p-6 text-center animate-fade-in form-container glass-effect transform-3d">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center shadow-lg float card-3d">
+                <i class="fas fa-cog text-xl text-indigo-600"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-3 gradient-text">Pengaturan Awal</h2>
+            <p class="text-slate-600 mb-6">Masukkan URL Web App untuk memulai sistem e-Pemilos</p>
+            <form id="setup-form">
+                <div class="mb-6">
+                    <label for="script-url-input" class="block text-sm font-medium text-slate-700 mb-2">Web App URL</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-link text-slate-400"></i>
+                        </div>
+                        <input type="url" id="script-url-input" class="form-input pl-10" placeholder="https://script.google.com/macros/s/..." required>
+                    </div>
+                    <p class="text-slate-500 text-xs mt-2">Masukkan URL Web App Google Apps Script Anda</p>
+                </div>
+                <button type="submit" class="btn-primary touch-target magnetic-btn glow">
+                    <i class="fas fa-save mr-2"></i>
+                    Simpan & Lanjutkan
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+        <div class="card p-6 text-center animate-fade-in form-container glass-effect transform-3d">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center shadow-lg float card-3d">
+                <i class="fas fa-user-circle text-xl text-indigo-600"></i>
+            </div>
+            <h2 class="text-xl font-bold mb-3 gradient-text">Selamat Datang!</h2>
+            <p class="text-slate-600 mb-6">Masukkan NIS untuk memulai pemilihan</p>
+            <form id="login-form">
+                <div class="mb-6">
+                    <label for="nis" class="block text-sm font-medium text-slate-700 mb-2">Nomor Induk Siswa (NIS)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-id-card text-slate-400"></i>
+                        </div>
+                        <input type="text" id="nis" name="nis" class="form-input pl-10" placeholder="Masukkan NIS Anda" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary touch-target magnetic-btn glow">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Masuk
+                </button>
+            </form>
+            <div class="mt-6">
+                <button id="show-results-btn" class="text-indigo-600 hover:text-indigo-800 font-medium transition flex items-center justify-center gap-2 mx-auto p-3 rounded-xl hover:bg-indigo-50 w-full max-w-xs touch-target magnetic-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    Lihat Hasil Real-time
+                </button>
+                <div class="mt-4">
+                    <button id="change-url-btn" class="text-slate-500 hover:text-slate-700 text-sm transition flex items-center gap-2 mx-auto p-2 rounded-lg hover:bg-slate-100 touch-target magnetic-btn">
+                        <i class="fas fa-cog"></i>
+                        Ganti URL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vote Ketua Page -->
+    <div id="vote-ketua-page" class="page">
+        <div class="text-center mb-6">
+            <h2 class="text-xl font-bold gradient-text">Pemilihan Ketua OSIS</h2>
+            <p class="text-slate-600 mt-2">Selamat datang, <span id="voter-name" class="text-indigo-600 font-semibold"></span>! (Kelas: <span id="voter-class" class="font-semibold text-indigo-700"></span>)</p>
+        </div>
+        <div id="candidate-list-ketua" class="candidate-grid">
+            <!-- Candidate cards for Ketua will be injected here -->
+        </div>
+        <div class="text-center mt-6">
+            <button id="next-to-wakil-btn" class="btn-primary touch-target magnetic-btn glow" disabled>
+                <i class="fas fa-arrow-right mr-2"></i>
+                Lanjut ke Pemilihan Wakil Ketua
+            </button>
+        </div>
+    </div>
+
+    <!-- Vote Wakil Page -->
+    <div id="vote-wakil-page" class="page">
+        <div class="text-center mb-6">
+            <h2 class="text-xl font-bold gradient-text">Pemilihan Wakil Ketua OSIS</h2>
+            <p class="text-slate-600 mt-2">Anda telah memilih Ketua: <span id="selected-ketua-name" class="font-semibold text-indigo-700"></span></p>
+        </div>
+        <div id="candidate-list-wakil" class="candidate-grid">
+            <!-- Candidate cards for Wakil will be injected here -->
+        </div>
+        <div class="text-center mt-6 flex flex-col gap-4">
+            <button id="back-to-ketua-btn" class="btn-secondary touch-target magnetic-btn">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Ketua
+            </button>
+            <button id="submit-all-votes-btn" class="btn-primary touch-target magnetic-btn glow" disabled>
+                <i class="fas fa-check-circle mr-2"></i>
+                Konfirmasi Semua Pilihan
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Page -->
+    <div id="results-page" class="page">
+        <!-- Header Results -->
+        <div class="results-header glass-effect">
+            <h2 class="text-xl font-bold">Hasil Perhitungan Suara</h2>
+            <p class="text-indigo-100 mt-1">Pemilihan Ketua & Wakil Ketua OSIS</p>
+            <div class="mt-4 flex justify-center">
+                <div class="bg-white/20 rounded-full py-2 px-4 inline-flex items-center gap-2 text-sm glass-effect">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh:</span>
+                    <span id="refresh-countdown">05:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistik Utama -->
+        <div class="stats-grid">
+            <div class="stat-card glass-effect">
+                <div class="text-lg font-bold text-indigo-600 mb-1" id="total-votes">0</div>
+                <div class="text-xs text-slate-600">Total Suara</div>
+            </div>
+            <div class="stat-card glass-effect">
+                <div class="text-lg font-bold text-emerald-600 mb-1" id="participation-rate">0%</div>
+                <div class="text-xs text-slate-600">Partisipasi</div>
+            </div>
+            <div class="stat-card glass-effect">
+                <div class="text-sm font-bold text-amber-600 truncate mb-1" id="leading-ketua">-</div>
+                <div class="text-xs text-slate-600">PEMIMPIN PEROLEHAN SUARA KETUA OSIS</div>
+            </div>
+            <div class="stat-card glass-effect">
+                <div class="text-sm font-bold text-amber-600 truncate mb-1" id="leading-wakil">-</div>
+                <div class="text-xs text-slate-600">PEMIMPIN PEROLEHAN SUARA WAKIL KETUA OSIS</div>
+            </div>
+        </div>
+
+        <!-- Slideshow untuk Hasil Pemilihan -->
+        <div class="card p-4 glass-effect">
+            <div class="slideshow-container">
+                <div class="slides" id="results-slides">
+                    <!-- Slide 1: Partisipasi Pemilih -->
+                    <div class="slide">
+                        <div class="results-slide glass-effect">
+                            <h3 class="text-lg font-bold mb-4 gradient-text text-center">Partisipasi Pemilihan</h3>
+
+                            <div class="participation-highlight">
+                                <div class="participation-percentage" id="slideshow-participation-percentage">0%</div>
+                                <div class="participation-label">Tingkat Partisipasi</div>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="slideshow-participation-chart"></canvas>
+                            </div>
+
+                            <div class="participation-stats">
+                                <div class="stat-box voted glass-effect">
+                                    <div class="stat-value voted" id="slideshow-voted-count">0</div>
+                                    <div class="stat-label">Sudah Memilih</div>
+                                </div>
+                                <div class="stat-box not-voted glass-effect">
+                                    <div class="stat-value not-voted" id="slideshow-not-voted-count">0</div>
+                                    <div class="stat-label">Belum Memilih</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Hasil Ketua OSIS -->
+                    <div class="slide">
+                        <div class="results-slide glass-effect">
+                            <h3 class="text-lg font-bold mb-4 gradient-text text-center">Hasil Pemilihan Ketua OSIS</h3>
+
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-medium text-slate-800 text-sm">Perolehan Suara</h4>
+                                <span class="text-xs text-slate-600" id="slideshow-total-ketua-votes">0 suara</span>
+                            </div>
+
+                            <div class="chart-container mb-4">
+                                <canvas id="slideshow-ketua-pie-chart"></canvas>
+                            </div>
+
+                            <div id="slideshow-ketua-candidates-list">
+                                <!-- Daftar kandidat ketua akan dimuat di sini -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Hasil Wakil Ketua OSIS -->
+                    <div class="slide">
+                        <div class="results-slide glass-effect">
+                            <h3 class="text-lg font-bold mb-4 gradient-text text-center">Hasil Pemilihan Wakil Ketua OSIS</h3>
+
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-medium text-slate-800 text-sm">Perolehan Suara</h4>
+                                <span class="text-xs text-slate-600" id="slideshow-total-wakil-votes">0 suara</span>
+                            </div>
+
+                            <div class="chart-container mb-4">
+                                <canvas id="slideshow-wakil-pie-chart"></canvas>
+                            </div>
+
+                            <div id="slideshow-wakil-candidates-list">
+                                <!-- Daftar kandidat wakil akan dimuat di sini -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons -->
+                <button class="slide-nav prev" id="slide-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slide-nav next" id="slide-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Slide indicators -->
+            <div class="slide-indicators" id="slide-indicators">
+                <div class="slide-indicator active" data-slide="0"></div>
+                <div class="slide-indicator" data-slide="1"></div>
+                <div class="slide-indicator" data-slide="2"></div>
+            </div>
+        </div>
+
+        <div class="text-center mt-6">
+            <button id="back-to-vote-btn" class="btn-secondary touch-target magnetic-btn">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Kembali ke Pemilihan
+            </button>
+        </div>
+    </div>
+
+    <!-- Thank You Page -->
+    <div id="thank-you-page" class="page">
+        <div class="thank-you-container">
+            <div class="text-center max-w-md mx-auto">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center shadow-lg float pulse card-3d">
+                    <i class="fas fa-check-circle text-4xl text-green-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold mt-4 gradient-text">Terima Kasih!</h2>
+                <p class="text-slate-600 mt-2">Suara Anda telah berhasil direkam.</p>
+                <div class="mt-6">
+                    <button id="logout-btn" class="btn-primary touch-target magnetic-btn glow">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Selesai & Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Loading Indicator -->
+<div id="loader" class="fixed inset-0 bg-white/90 backdrop-blur-lg flex flex-col justify-center items-center z-50 hidden">
+    <div class="loader mb-4"></div>
+    <p class="text-slate-600 font-medium text-sm">Memproses...</p>
+</div>
+
+<!-- Notification System -->
+<div id="notification" class="notification hidden glass-effect">
+    <div class="flex items-start">
+        <i id="notification-icon" class="fas fa-info-circle mr-3 mt-1"></i>
+        <p id="notification-text" class="flex-1 text-sm"></p>
+        <button id="notification-close" class="ml-2 text-white/80 hover:text-white">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal-overlay">
+    <div class="modal-content glass-effect">
+        <div class="text-center mb-4">
+            <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-yellow-100 flex items-center justify-center">
+                <i class="fas fa-exclamation-circle text-lg text-yellow-500"></i>
+            </div>
+            <h3 class="font-bold text-slate-800 text-lg">Konfirmasi Pilihan Anda</h3>
+        </div>
+        <div id="modal-selections" class="mb-4">
+            <!-- Selection details will be injected here -->
+        </div>
+        <div class="flex flex-col gap-3">
+            <button id="cancel-vote-btn" class="btn-secondary touch-target magnetic-btn">
+                <i class="fas fa-times mr-2"></i>
+                Batal
+            </button>
+            <button id="confirm-vote-btn" class="btn-primary touch-target magnetic-btn glow" style="background: linear-gradient(135deg, #10b981, #059669);">
+                <i class="fas fa-check mr-2"></i>
+                Yakin & Pilih
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Script untuk partikel dan efek interaktif -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    // ===== KONFIGURASI APLIKASI =====
+    const CONFIG = {
+        PALETTE: [
+            '#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6'
+        ],
+        REFRESH_INTERVAL: 300000, // 5 menit
+        DEFAULT_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwaozuGTnizb7pEPFxMzMnsCYryd7jUeIO5nMj7i2CXvkuUiukdyTEWhXed2jzZKivX6Q/exec'
+    };
+
+    // ===== STATE MANAGEMENT =====
+    class AppState {
+        constructor() {
+            this.voter = null;
+            this.candidates = { ketua: [], wakil: [] };
+            this.selections = { ketua: null, wakil: null };
+            this.scriptUrl = localStorage.getItem('pemilosWebAppUrl') || CONFIG.DEFAULT_SCRIPT_URL;
+            this.resultsInterval = null;
+            this.refreshTimerInterval = null;
+            this.refreshTimerSeconds = 300;
+            this.charts = {
+                participation: null,
+                ketua: null,
+                wakil: null
+            };
+            this.notificationTimeout = null;
+            this.currentSlide = 0;
+            this.slideInterval = null;
+        }
+
+        resetVote() {
+            this.selections = { ketua: null, wakil: null };
+        }
+
+        resetAll() {
+            this.voter = null;
+            this.candidates = { ketua: [], wakil: [] };
+            this.selections = { ketua: null, wakil: null };
+        }
+
+        setScriptUrl(url) {
+            this.scriptUrl = url;
+            localStorage.setItem('pemilosWebAppUrl', url);
+        }
+    }
+
+    const appState = new AppState();
+
+    // ===== ELEMEN DOM =====
+    const elements = {
+        pages: {
+            setup: document.getElementById('setup-page'),
+            login: document.getElementById('login-page'),
+            voteKetua: document.getElementById('vote-ketua-page'),
+            voteWakil: document.getElementById('vote-wakil-page'),
+            results: document.getElementById('results-page'),
+            thankYou: document.getElementById('thank-you-page')
+        },
+        loader: document.getElementById('loader'),
+        notification: document.getElementById('notification'),
+        notificationIcon: document.getElementById('notification-icon'),
+        notificationText: document.getElementById('notification-text'),
+        notificationClose: document.getElementById('notification-close'),
+        setupForm: document.getElementById('setup-form'),
+        scriptUrlInput: document.getElementById('script-url-input'),
+        loginForm: document.getElementById('login-form'),
+        nisInput: document.getElementById('nis'),
+        voterNameSpan: document.getElementById('voter-name'),
+        voterClassSpan: document.getElementById('voter-class'),
+        candidateListKetuaDiv: document.getElementById('candidate-list-ketua'),
+        candidateListWakilDiv: document.getElementById('candidate-list-wakil'),
+        showResultsBtn: document.getElementById('show-results-btn'),
+        changeUrlBtn: document.getElementById('change-url-btn'),
+        backToVoteBtn: document.getElementById('back-to-vote-btn'),
+        logoutBtn: document.getElementById('logout-btn'),
+        nextToWakilBtn: document.getElementById('next-to-wakil-btn'),
+        backToKetuaBtn: document.getElementById('back-to-ketua-btn'),
+        submitAllVotesBtn: document.getElementById('submit-all-votes-btn'),
+        selectedKetuaNameSpan: document.getElementById('selected-ketua-name'),
+        confirmationModal: document.getElementById('confirmation-modal'),
+        modalSelections: document.getElementById('modal-selections'),
+        confirmVoteBtn: document.getElementById('confirm-vote-btn'),
+        cancelVoteBtn: document.getElementById('cancel-vote-btn'),
+        refreshCountdown: document.getElementById('refresh-countdown'),
+        // Results elements
+        totalVotes: document.getElementById('total-votes'),
+        participationRate: document.getElementById('participation-rate'),
+        leadingKetua: document.getElementById('leading-ketua'),
+        leadingWakil: document.getElementById('leading-wakil'),
+        // Slideshow elements
+        resultsSlides: document.getElementById('results-slides'),
+        slidePrev: document.getElementById('slide-prev'),
+        slideNext: document.getElementById('slide-next'),
+        slideIndicators: document.getElementById('slide-indicators'),
+        // Slideshow-specific elements
+        slideshowParticipationPercentage: document.getElementById('slideshow-participation-percentage'),
+        slideshowVotedCount: document.getElementById('slideshow-voted-count'),
+        slideshowNotVotedCount: document.getElementById('slideshow-not-voted-count'),
+        slideshowTotalKetuaVotes: document.getElementById('slideshow-total-ketua-votes'),
+        slideshowTotalWakilVotes: document.getElementById('slideshow-total-wakil-votes'),
+        slideshowKetuaCandidatesList: document.getElementById('slideshow-ketua-candidates-list'),
+        slideshowWakilCandidatesList: document.getElementById('slideshow-wakil-candidates-list'),
+        // Chart elements
+        slideshowParticipationChart: document.getElementById('slideshow-participation-chart'),
+        slideshowKetuaPieChart: document.getElementById('slideshow-ketua-pie-chart'),
+        slideshowWakilPieChart: document.getElementById('slideshow-wakil-pie-chart'),
+        // Confetti container
+        confettiContainer: document.getElementById('confetti-container')
+    };
+
+    // ===== UTILITY FUNCTIONS =====
+    const utils = {
+        toggleLoader(show) {
+            elements.loader.classList.toggle('hidden', !show);
+        },
+
+        showNotification(message, type = 'info', duration = 5000) {
+            // Clear existing notification timeout
+            if (appState.notificationTimeout) {
+                clearTimeout(appState.notificationTimeout);
+            }
+
+            // Hide any existing notification first
+            this.hideNotification();
+
+            // Set notification content and style
+            elements.notificationText.textContent = message;
+            elements.notification.className = `notification ${type} hidden`;
+
+            // Set appropriate icon
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            elements.notificationIcon.className = `fas ${icons[type]} mr-3 mt-1`;
+
+            // Show notification
+            setTimeout(() => {
+                elements.notification.classList.remove('hidden');
+                elements.notification.classList.add('show');
+            }, 10);
+
+            // Auto hide after duration
+            appState.notificationTimeout = setTimeout(() => {
+                this.hideNotification();
+            }, duration);
+        },
+
+        hideNotification() {
+            elements.notification.classList.remove('show');
+            elements.notification.classList.add('hide');
+
+            // Remove from DOM after animation completes
+            setTimeout(() => {
+                elements.notification.classList.add('hidden');
+                elements.notification.classList.remove('hide');
+            }, 400);
+        },
+
+        showPage(pageKey) {
+            Object.values(elements.pages).forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const pageToShow = elements.pages[pageKey];
+            if (pageToShow) {
+                pageToShow.classList.add('active');
+            }
+
+            if (pageKey === 'thankYou') {
+                this.startConfetti();
+            }
+
+            if (pageKey !== 'results') {
+                resultsFlow.stopResultsRefresh();
+                slideshowFlow.stopSlideshow();
+            } else {
+                slideshowFlow.startSlideshow();
+            }
+        },
+
+        startConfetti() {
+            // Enhanced confetti effect
+            const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+            const container = elements.confettiContainer;
+            container.innerHTML = '';
+
+            for (let i = 0; i < 80; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.animation = `confetti-fall ${2 + Math.random() * 2}s ease-in-out forwards`;
+                confetti.style.animationDelay = Math.random() * 1 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.opacity = '0.7';
+                confetti.style.zIndex = '9999';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.borderRadius = '50%';
+                container.appendChild(confetti);
+
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 5000);
+            }
+        },
+
+        convertGoogleDriveUrl(url) {
+            if (!url) return 'https://placehold.co/150x150/E2E8F0/4A5568?text=Foto';
+
+            if (url.includes('drive.google.com/uc?')) return url;
+
+            if (url.includes('drive.google.com/file/d/')) {
+                const fileId = url.match(/\/d\/([^\/]+)/)?.[1];
+                if (fileId) {
+                    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+                }
+            }
+
+            return url;
+        },
+
+        animateCountUp(element, endValue, isPercentage = false) {
+            if (!element) return;
+
+            let startValue = 0;
+            const duration = 1000;
+            const startTime = performance.now();
+
+            function step(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / duration, 1);
+
+                let currentValue = progress * (endValue - startValue) + startValue;
+
+                if (isPercentage) {
+                    element.textContent = `${currentValue.toFixed(1)}%`;
+                } else {
+                    element.textContent = Math.floor(currentValue);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                     if (isPercentage) {
+                        element.textContent = `${endValue.toFixed(1)}%`;
+                     } else {
+                        element.textContent = endValue;
+                     }
+                }
+            }
+            requestAnimationFrame(step);
+        },
+
+        showModal() {
+            elements.confirmationModal.classList.add('active');
+        },
+
+        closeModal() {
+            elements.confirmationModal.classList.remove('active');
+        },
+
+        createInteractiveBackground() {
+            const container = document.getElementById('interactive-bg');
+            const elementCount = 15;
+
+            for (let i = 0; i < elementCount; i++) {
+                const element = document.createElement('div');
+                element.classList.add('bg-element');
+
+                // Random size between 50px and 200px
+                const size = Math.random() * 150 + 50;
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+
+                // Random position
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.top = `${Math.random() * 100}%`;
+
+                // Random animation
+                element.style.animation = `float ${15 + Math.random() * 15}s infinite ease-in-out`;
+                element.style.animationDelay = `${Math.random() * 5}s`;
+
+                container.appendChild(element);
+            }
+        },
+
+        initParticles() {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+        }
+    };
+
+    // ===== SLIDESHOW FUNCTIONS =====
+    const slideshowFlow = {
+        startSlideshow() {
+            // Auto-advance slides every 5 seconds
+            appState.slideInterval = setInterval(() => {
+                this.nextSlide();
+            }, 5000);
+        },
+
+        stopSlideshow() {
+            if (appState.slideInterval) {
+                clearInterval(appState.slideInterval);
+                appState.slideInterval = null;
+            }
+        },
+
+        nextSlide() {
+            appState.currentSlide = (appState.currentSlide + 1) % 3;
+            this.updateSlideshow();
+        },
+
+        prevSlide() {
+            appState.currentSlide = (appState.currentSlide - 1 + 3) % 3;
+            this.updateSlideshow();
+        },
+
+        goToSlide(slideIndex) {
+            appState.currentSlide = slideIndex;
+            this.updateSlideshow();
+        },
+
+        updateSlideshow() {
+            // Update slide position
+            elements.resultsSlides.style.transform = `translateX(-${appState.currentSlide * 100}%)`;
+
+            // Update indicators
+            const indicators = elements.slideIndicators.querySelectorAll('.slide-indicator');
+            indicators.forEach((indicator, index) => {
+                if (index === appState.currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+
+            // Reset auto-advance timer
+            this.stopSlideshow();
+            this.startSlideshow();
+        }
+    };
+
+    // ===== API FUNCTIONS =====
+    const api = {
+        jsonpRequest(action, params, callback) {
+            if (!appState.scriptUrl) {
+                utils.showNotification("URL Web App belum diatur.", "error");
+                utils.showPage('setup');
+                return;
+            }
+
+            utils.toggleLoader(true);
+            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+
+            window[callbackName] = function(data) {
+                delete window[callbackName];
+                if (document.body.contains(script)) {
+                    document.body.removeChild(script);
+                }
+                utils.toggleLoader(false);
+                callback(data);
+            };
+
+            const script = document.createElement('script');
+            let url = `${appState.scriptUrl}?action=${action}&callback=${callbackName}`;
+
+            if (params) {
+                Object.keys(params).forEach(key => {
+                    if (params[key] !== undefined && params[key] !== null) {
+                        url += `&${key}=${encodeURIComponent(params[key])}`;
+                    }
+                });
+            }
+
+            script.src = url;
+            script.onerror = () => {
+                utils.showNotification('Gagal terhubung ke server. Periksa URL dan koneksi internet.', 'error');
+                delete window[callbackName];
+                if (document.body.contains(script)) {
+                    document.body.removeChild(script);
+                }
+                utils.toggleLoader(false);
+            };
+
+            document.body.appendChild(script);
+        },
+
+        loginPemilih(nis) {
+            this.jsonpRequest('loginPemilih', { nis: nis }, (response) => {
+                if (response.status === 'success') {
+                    if (response.data.sudahMemilih) {
+                        utils.showPage('thankYou');
+                    } else {
+                        appState.voter = response.data;
+                        elements.voterNameSpan.textContent = appState.voter.nama;
+                        elements.voterClassSpan.textContent = appState.voter.kelas;
+                        voteFlow.showVoteKetuaPage();
+                        utils.showNotification(`Selamat datang, ${appState.voter.nama}!`, 'success');
+                    }
+                } else {
+                    utils.showNotification(response.message, 'error');
+                }
+            });
+        },
+
+        loadCandidates(position) {
+            const action = position === 'ketua' ? 'getKandidatKetua' : 'getKandidatWakil';
+
+            this.jsonpRequest(action, null, (response) => {
+                if (response.status === 'success') {
+                    appState.candidates[position] = response.data;
+                    voteFlow.renderCandidates(position);
+                } else {
+                    utils.showNotification(`Gagal memuat data kandidat ${position}.`, 'error');
+                }
+            });
+        },
+
+        submitVoteDuaPosisi() {
+            if (!appState.selections.ketua || !appState.selections.wakil) {
+                utils.showNotification("Silakan pilih kedua kandidat (Ketua dan Wakil Ketua).", "error");
+                return;
+            }
+
+            if (!appState.voter || !appState.voter.nis) {
+                utils.showNotification("Data pemilih tidak valid. Silakan login kembali.", "error");
+                return;
+            }
+
+            const submitData = {
+                nis: appState.voter.nis.toString().trim(),
+                idKandidatKetua: appState.selections.ketua.id.toString().trim(),
+                idKandidatWakil: appState.selections.wakil.id.toString().trim()
+            };
+
+            this.jsonpRequest('submitSuaraDuaPosisi', submitData, (response) => {
+                if (response.status === 'success') {
+                    utils.closeModal();
+                    utils.showPage('thankYou');
+                    utils.showNotification('Suara Anda berhasil direkam!', 'success');
+                } else {
+                    utils.showNotification(response.message, 'error');
+                }
+            });
+        },
+
+        fetchAndDrawResults() {
+            this.jsonpRequest('getHasilDuaPosisi', null, (response) => {
+                if (response.status === 'success') {
+                    resultsFlow.updateResults(response);
+                } else {
+                    utils.showNotification('Gagal memuat hasil perhitungan suara.', 'error');
+                }
+            });
+        }
+    };
+
+    // ===== VOTE FLOW FUNCTIONS =====
+    const voteFlow = {
+        showVoteKetuaPage() {
+            utils.showPage('voteKetua');
+            api.loadCandidates('ketua');
+        },
+
+        showVoteWakilPage() {
+            if (!appState.selections.ketua) {
+                utils.showNotification('Silakan pilih ketua terlebih dahulu.', 'error');
+                return;
+            }
+
+            elements.selectedKetuaNameSpan.textContent = appState.selections.ketua.name;
+            utils.showPage('voteWakil');
+            api.loadCandidates('wakil');
+        },
+
+        renderCandidates(position) {
+            const container = position === 'ketua' ? elements.candidateListKetuaDiv : elements.candidateListWakilDiv;
+            const candidates = appState.candidates[position];
+
+            container.innerHTML = '';
+
+            if (!candidates || candidates.length === 0) {
+                container.innerHTML = `
+                    <div class="card p-4 text-center col-span-full glass-effect">
+                        <i class="fas fa-exclamation-triangle text-amber-500 text-xl mb-2"></i>
+                        <h3 class="font-semibold text-slate-700 mb-1">Data Kandidat ${position === 'ketua' ? 'Ketua' : 'Wakil Ketua'} Tidak Tersedia</h3>
+                        <p class="text-slate-500 text-sm">Silakan hubungi administrator.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            candidates.forEach((candidate) => {
+                const card = document.createElement('div');
+                card.className = 'card candidate-card touch-target glass-effect card-3d';
+                card.setAttribute('data-id', candidate.id);
+                card.setAttribute('data-name', candidate.nama);
+                card.setAttribute('data-position', position);
+
+                const photoUrl = utils.convertGoogleDriveUrl(candidate.foto_url);
+
+                card.innerHTML = `
+                    <div class="relative mb-3 overflow-hidden rounded-xl shadow">
+                        <img src="${photoUrl}" alt="Foto ${candidate.nama}" class="candidate-photo w-20 h-20 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/150x150/E2E8F0/4A5568?text=Foto';">
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center text-sm font-bold border-2 border-white shadow -mt-6 mb-2">${candidate.id}</div>
+                    <h3 class="font-bold text-slate-800 mb-2">${candidate.nama}</h3>
+                    <div class="text-left w-full mt-1 space-y-2">
+                        <div>
+                            <p class="font-medium text-slate-700 text-xs flex items-center gap-1 mb-1"><i class="fas fa-eye text-indigo-500"></i> Visi:</p>
+                            <p class="text-slate-500 text-xs line-clamp-2" title="${candidate.visi}">${candidate.visi}</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-700 text-xs flex items-center gap-1 mb-1"><i class="fas fa-bullseye text-indigo-500"></i> Misi:</p>
+                            <p class="text-slate-500 text-xs line-clamp-2" title="${candidate.misi}">${candidate.misi}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                // Pasang event listener untuk kartu kandidat
+                card.addEventListener('click', () => {
+                    this.handleCandidateSelection(card, position);
+                });
+            });
+        },
+
+        handleCandidateSelection(card, position) {
+            const container = position === 'ketua' ? elements.candidateListKetuaDiv : elements.candidateListWakilDiv;
+            const candidateId = card.getAttribute('data-id');
+            const candidateName = card.getAttribute('data-name');
+
+            if (!candidateId || !candidateName) {
+                utils.showNotification('Data kandidat tidak valid. Silakan pilih kandidat lain.', 'error');
+                return;
+            }
+
+            // Hapus seleksi dari semua kartu di container ini
+            container.querySelectorAll('.candidate-card').forEach(c => {
+                c.classList.remove('selected');
+            });
+
+            // Tandai kartu yang dipilih
+            card.classList.add('selected');
+
+            // Simpan data kandidat yang dipilih
+            if (position === 'ketua') {
+                appState.selections.ketua = {
+                    id: candidateId,
+                    name: candidateName
+                };
+                elements.nextToWakilBtn.disabled = false;
+                utils.showNotification(`Anda memilih ${candidateName} sebagai Ketua OSIS`, 'info');
+            } else {
+                appState.selections.wakil = {
+                    id: candidateId,
+                    name: candidateName
+                };
+                elements.submitAllVotesBtn.disabled = false;
+                utils.showNotification(`Anda memilih ${candidateName} sebagai Wakil Ketua OSIS`, 'info');
+            }
+        },
+
+        showConfirmationModal() {
+            if (!appState.selections.ketua || !appState.selections.wakil) {
+                utils.showNotification('Silakan pilih kedua kandidat (Ketua dan Wakil Ketua).', 'error');
+                return;
+            }
+
+            elements.modalSelections.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-indigo-50 rounded-xl glass-effect">
+                        <div>
+                            <strong class="text-indigo-700 text-sm">Ketua OSIS:</strong>
+                            <p class="text-indigo-900 font-semibold">${appState.selections.ketua.name}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-user text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-xl glass-effect">
+                        <div>
+                            <strong class="text-emerald-700 text-sm">Wakil Ketua OSIS:</strong>
+                            <p class="text-emerald-900 font-semibold">${appState.selections.wakil.name}</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <i class="fas fa-user-friends text-emerald-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-3 text-slate-600 text-sm">Apakah Anda yakin dengan pilihan ini?</p>
+            `;
+            utils.showModal();
+        }
+    };
+
+    // ===== RESULTS FLOW FUNCTIONS =====
+    const resultsFlow = {
+        startRefreshTimer() {
+            appState.refreshTimerSeconds = 300;
+
+            if (appState.refreshTimerInterval) {
+                clearInterval(appState.refreshTimerInterval);
+            }
+
+            appState.refreshTimerInterval = setInterval(() => {
+                appState.refreshTimerSeconds--;
+
+                const minutes = Math.floor(appState.refreshTimerSeconds / 60);
+                const seconds = appState.refreshTimerSeconds % 60;
+                elements.refreshCountdown.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (appState.refreshTimerSeconds <= 0) {
+                    clearInterval(appState.refreshTimerInterval);
+                    api.fetchAndDrawResults();
+                    this.startRefreshTimer();
+                    utils.showNotification('Hasil pemilihan telah diperbarui', 'info');
+                }
+            }, 1000);
+        },
+
+        stopResultsRefresh() {
+            if (appState.resultsInterval) {
+                clearInterval(appState.resultsInterval);
+                appState.resultsInterval = null;
+            }
+            if (appState.refreshTimerInterval) {
+                clearInterval(appState.refreshTimerInterval);
+                appState.refreshTimerInterval = null;
+            }
+        },
+
+        updateResults(resultsData) {
+            const resultsKetua = resultsData.data.ketua;
+            const resultsWakil = resultsData.data.wakil;
+            const mappingKetua = resultsData.mapping.ketua;
+            const mappingWakil = resultsData.mapping.wakil;
+            const photosKetua = resultsData.photos.ketua;
+            const photosWakil = resultsData.photos.wakil;
+
+            // Proses data untuk Ketua
+            const processedKetua = this.processCandidateData(resultsKetua, mappingKetua, photosKetua);
+            this.renderResults(processedKetua, 'ketua');
+
+            // Proses data untuk Wakil Ketua
+            const processedWakil = this.processCandidateData(resultsWakil, mappingWakil, photosWakil);
+            this.renderResults(processedWakil, 'wakil');
+
+            // Update statistik umum
+            const totalVotes = resultsData.totalSuara;
+            const totalPemilih = resultsData.totalPemilih;
+            const participation = totalPemilih > 0 ? parseFloat(((totalVotes / totalPemilih) * 100).toFixed(1)) : 0;
+
+            utils.animateCountUp(elements.totalVotes, totalVotes);
+            utils.animateCountUp(elements.participationRate, participation, true);
+
+            // Update partisipasi slideshow
+            this.updateParticipationSlideshow(totalVotes, totalPemilih);
+
+            // Tentukan pemenang untuk kedua posisi
+            this.updateLeadingCandidates(processedKetua, processedWakil);
+        },
+
+        updateParticipationSlideshow(voted, total) {
+            const notVoted = total - voted;
+            const participationPercentage = total > 0 ? ((voted / total) * 100).toFixed(1) : 0;
+
+            // Update elements
+            elements.slideshowParticipationPercentage.textContent = `${participationPercentage}%`;
+            elements.slideshowVotedCount.textContent = voted;
+            elements.slideshowNotVotedCount.textContent = notVoted;
+
+            // Update or create pie chart
+            if (appState.charts.participation) {
+                appState.charts.participation.data.datasets[0].data = [voted, notVoted];
+                appState.charts.participation.update();
+            } else {
+                appState.charts.participation = new Chart(elements.slideshowParticipationChart, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Sudah Memilih', 'Belum Memilih'],
+                        datasets: [{
+                            data: [voted, notVoted],
+                            backgroundColor: [
+                                'rgba(79, 70, 229, 0.8)',
+                                'rgba(100, 116, 139, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(79, 70, 229, 1)',
+                                'rgba(100, 116, 139, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        },
+
+        processCandidateData(results, mapping, photos) {
+            const sortedCandidateIds = Object.keys(mapping).sort();
+            const combinedCandidates = sortedCandidateIds.map(id => {
+                const photoUrl = utils.convertGoogleDriveUrl(photos[id]);
+                return {
+                    id: id,
+                    name: mapping[id] || `Kandidat ${id}`,
+                    votes: results[id] || 0,
+                    photo: photoUrl
+                };
+            });
+
+            combinedCandidates.sort((a, b) => b.votes - a.votes);
+            const totalVotes = combinedCandidates.reduce((sum, current) => sum + current.votes, 0);
+
+            // Hitung persentase
+            combinedCandidates.forEach(candidate => {
+                candidate.percentage = totalVotes > 0 ?
+                    ((candidate.votes / totalVotes) * 100).toFixed(1) : 0;
+            });
+
+            return {
+                candidates: combinedCandidates,
+                totalVotes: totalVotes
+            };
+        },
+
+        renderResults(processedData, position) {
+            const { candidates, totalVotes } = processedData;
+
+            // Update total votes
+            elements[`slideshowTotal${position.charAt(0).toUpperCase() + position.slice(1)}Votes`].textContent = `${totalVotes} suara`;
+
+            // Render pie chart
+            this.renderPieChart(candidates, position);
+
+            // Render candidate list
+            this.renderCandidateList(candidates, totalVotes, position);
+        },
+
+        renderPieChart(candidates, position) {
+            const labels = candidates.map(c => c.name);
+            const values = candidates.map(c => c.votes);
+            const backgroundColors = CONFIG.PALETTE.slice(0, candidates.length);
+
+            const chartElement = position === 'ketua' ? elements.slideshowKetuaPieChart : elements.slideshowWakilPieChart;
+
+            if (appState.charts[position]) {
+                appState.charts[position].data.labels = labels;
+                appState.charts[position].data.datasets[0].data = values;
+                appState.charts[position].update();
+                return;
+            }
+
+            appState.charts[position] = new Chart(chartElement, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} suara (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        },
+
+        renderCandidateList(candidates, totalVotes, position) {
+            const container = position === 'ketua' ? elements.slideshowKetuaCandidatesList : elements.slideshowWakilCandidatesList;
+            container.innerHTML = '';
+
+            // Cari pemenang (kandidat dengan suara terbanyak)
+            let maxVotes = -1;
+            let winnerId = null;
+            candidates.forEach(candidate => {
+                if (candidate.votes > maxVotes) {
+                    maxVotes = candidate.votes;
+                    winnerId = candidate.id;
+                }
+            });
+
+            candidates.forEach((candidate, index) => {
+                const isWinner = candidate.id === winnerId && candidate.votes > 0;
+                const percentage = totalVotes > 0 ? (candidate.votes / totalVotes) * 100 : 0;
+
+                const candidateElement = document.createElement('div');
+                candidateElement.className = `candidate-result ${isWinner ? 'winner' : ''} animate-fade-in glass-effect`;
+                candidateElement.style.animationDelay = `${index * 0.1}s`;
+
+                candidateElement.innerHTML = `
+                    <div class="candidate-rank">${index + 1}</div>
+                    <img src="${candidate.photo}" alt="${candidate.name}" class="candidate-photo-results" onerror="this.src='https://placehold.co/150x150/E2E8F0/4A5568?text=Foto'">
+                    <div class="candidate-details">
+                        <div class="candidate-name">${candidate.name}</div>
+                        <div class="candidate-stats">
+                            <span class="vote-percentage">${candidate.percentage}%</span>
+                            <span>${candidate.votes} dari ${totalVotes}</span>
+                        </div>
+                        <div class="vote-progress">
+                            <div class="vote-progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(candidateElement);
+
+                // Animate the progress bar
+                setTimeout(() => {
+                    const progressFill = candidateElement.querySelector('.vote-progress-fill');
+                    if (progressFill) {
+                        progressFill.style.width = '0%';
+                        setTimeout(() => {
+                            progressFill.style.width = `${percentage}%`;
+                        }, 100);
+                    }
+                }, index * 200);
+            });
+        },
+
+        updateLeadingCandidates(processedKetua, processedWakil) {
+            // Cari ketua terpimpin
+            let maxVotesKetua = -1;
+            let leadingCandidateKetua = '-';
+            processedKetua.candidates.forEach((candidate) => {
+                if (candidate.votes > maxVotesKetua && candidate.votes > 0) {
+                    maxVotesKetua = candidate.votes;
+                    leadingCandidateKetua = candidate.name;
+                }
+            });
+
+            // Cari wakil ketua terpimpin
+            let maxVotesWakil = -1;
+            let leadingCandidateWakil = '-';
+            processedWakil.candidates.forEach((candidate) => {
+                if (candidate.votes > maxVotesWakil && candidate.votes > 0) {
+                    maxVotesWakil = candidate.votes;
+                    leadingCandidateWakil = candidate.name;
+                }
+            });
+
+            elements.leadingKetua.textContent = leadingCandidateKetua;
+            elements.leadingWakil.textContent = leadingCandidateWakil;
+        },
+
+        showResultsPage() {
+            utils.showPage('results');
+            api.fetchAndDrawResults();
+            this.startRefreshTimer();
+            if (appState.resultsInterval) clearInterval(appState.resultsInterval);
+            appState.resultsInterval = setInterval(api.fetchAndDrawResults, CONFIG.REFRESH_INTERVAL);
+            utils.showNotification('Memuat hasil pemilihan terbaru', 'info');
+        }
+    };
+
+    // ===== EVENT HANDLERS =====
+    const eventHandlers = {
+        initialize() {
+            // Setup form
+            elements.setupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const url = elements.scriptUrlInput.value.trim();
+                if (url) {
+                    try {
+                        new URL(url);
+                        appState.setScriptUrl(url);
+                        utils.showPage('login');
+                        utils.showNotification('URL Web App berhasil disimpan', 'success');
+                    } catch(e) {
+                        utils.showNotification("Format URL tidak valid.", "error");
+                    }
+                } else {
+                    utils.showNotification("URL tidak boleh kosong.", "error");
+                }
+            });
+
+            // Login form
+            elements.loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nis = elements.nisInput.value.trim();
+
+                if (!nis) {
+                    utils.showNotification('NIS tidak boleh kosong.', 'error');
+                    return;
+                }
+
+                api.loginPemilih(nis);
+            });
+
+            // Navigation buttons
+            elements.showResultsBtn.addEventListener('click', () => resultsFlow.showResultsPage());
+            elements.changeUrlBtn.addEventListener('click', () => utils.showPage('setup'));
+            elements.backToVoteBtn.addEventListener('click', () => {
+                if (appState.voter) {
+                    voteFlow.showVoteKetuaPage();
+                } else {
+                    utils.showPage('login');
+                }
+            });
+            elements.logoutBtn.addEventListener('click', () => {
+                appState.resetAll();
+                elements.nisInput.value = '';
+                utils.showPage('login');
+                utils.showNotification('Anda telah keluar dari sistem', 'info');
+            });
+
+            // Vote navigation buttons
+            elements.nextToWakilBtn.addEventListener('click', () => voteFlow.showVoteWakilPage());
+            elements.backToKetuaBtn.addEventListener('click', () => voteFlow.showVoteKetuaPage());
+
+            // Submit all votes button
+            elements.submitAllVotesBtn.addEventListener('click', () => voteFlow.showConfirmationModal());
+
+            // Modal buttons
+            elements.confirmVoteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                api.submitVoteDuaPosisi();
+            });
+
+            elements.cancelVoteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                utils.closeModal();
+            });
+
+            // Close modal when clicking outside
+            elements.confirmationModal.addEventListener('click', (e) => {
+                if (e.target === elements.confirmationModal) {
+                    utils.closeModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && elements.confirmationModal.classList.contains('active')) {
+                    utils.closeModal();
+                }
+            });
+
+            // Notification close button
+            elements.notificationClose.addEventListener('click', () => {
+                utils.hideNotification();
+            });
+
+            // Slideshow navigation
+            elements.slidePrev.addEventListener('click', () => slideshowFlow.prevSlide());
+            elements.slideNext.addEventListener('click', () => slideshowFlow.nextSlide());
+
+            // Slide indicators
+            elements.slideIndicators.querySelectorAll('.slide-indicator').forEach((indicator) => {
+                indicator.addEventListener('click', () => {
+                    const slideIndex = parseInt(indicator.getAttribute('data-slide'));
+                    slideshowFlow.goToSlide(slideIndex);
+                });
+            });
+
+            // Initialize app
+            this.initializeApp();
+        },
+
+        initializeApp() {
+            // Create interactive background
+            utils.createInteractiveBackground();
+
+            // Initialize particle system
+            utils.initParticles();
+
+            // Set initial URL if exists
+            if (appState.scriptUrl) {
+                elements.scriptUrlInput.value = appState.scriptUrl;
+                utils.showPage('login');
+            } else {
+                utils.showPage('setup');
+            }
+        }
+    };
+
+    // ===== INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', () => {
+        eventHandlers.initialize();
+    });
+</script>
+</body>
+</html>
